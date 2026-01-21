@@ -71,7 +71,7 @@ class CardWidget extends StatelessWidget {
               const SizedBox(height: 4),
               // Card Name
               SizedBox(
-                height: 26,
+                height: 30,
                 child: Text(
                   card.name,
                   maxLines: 2,
