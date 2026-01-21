@@ -6,14 +6,17 @@ A strategic card collection game inspired by the popular anime *Haikyuu!!*. Buil
 
 ### Home Screen
 ![alt text](image.png)
+
 *Open booster packs to collect new players and simulate matches to test your team strength.*
 
 ### Team Building
 ![alt text](<Screenshot 2026-01-22 004422.png>)
+
 *Strategically select your best 7 players to form your competitive team.*
 
 ### Card Collection
 ![alt text](<Screenshot 2026-01-22 004455.png>)
+
 *Browse and organize your entire card collection across different rarity levels.*
 
 ---
