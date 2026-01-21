@@ -1,71 +1,87 @@
 import 'dart:math';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/card.dart';
+import 'package:flutter/material.dart';
+import '../models/card.dart' as card_model;
 
-// Provider for all cards
-final allCardsProvider = Provider<List<CardModel>>((ref) => allCards);
+/// A simple ChangeNotifier-based game state used by an InheritedNotifier.
+class GameState extends ChangeNotifier {
+  final Set<String> owned = {};
+  final List<String> team = [];
 
-// Owned cards
-final ownedCardsProvider = NotifierProvider<OwnedCardsNotifier, Set<String>>(
-  () => OwnedCardsNotifier(),
-);
-
-class OwnedCardsNotifier extends Notifier<Set<String>> {
-  @override
-  Set<String> build() => {};
+  List<card_model.CardModel> get allCards => card_model.allCards;
 
   void addCard(String name) {
-    state = {...state, name};
+    if (!owned.contains(name)) {
+      owned.add(name);
+      notifyListeners();
+    }
   }
 
-  bool hasCard(String name) {
-    return state.contains(name);
-  }
-}
-
-// Team
-final teamProvider = NotifierProvider<TeamNotifier, List<String>>(
-  () => TeamNotifier(),
-);
-
-class TeamNotifier extends Notifier<List<String>> {
-  @override
-  List<String> build() => [];
+  bool hasCard(String name) => owned.contains(name);
 
   void addToTeam(String name) {
-    if (state.length < 7 && !state.contains(name)) {
-      state = [...state, name];
+    if (team.length < 7 && !team.contains(name)) {
+      team.add(name);
+      notifyListeners();
     }
   }
 
   void removeFromTeam(String name) {
-    state = state.where((n) => n != name).toList();
+    team.remove(name);
+    notifyListeners();
   }
-}
 
-// Pack generator
-final packGeneratorProvider = Provider((ref) => PackGenerator());
-
-class PackGenerator {
-  List<CardModel> generatePack() {
+  List<card_model.CardModel> generatePack() {
     final random = Random();
-    List<CardModel> pack = [];
+    List<card_model.CardModel> pack = [];
     for (int i = 0; i < 5; i++) {
-      Rarity rarity = _getRandomRarity(random);
-      List<CardModel> cardsOfRarity = allCards
+      final rarity = _getRandomRarity(random);
+      var cardsOfRarity = card_model.allCards
           .where((c) => c.rarity == rarity)
           .toList();
-      CardModel card = cardsOfRarity[random.nextInt(cardsOfRarity.length)];
-      pack.add(card);
+      if (cardsOfRarity.isEmpty) cardsOfRarity = card_model.allCards;
+      pack.add(cardsOfRarity[random.nextInt(cardsOfRarity.length)]);
     }
     return pack;
   }
 
-  Rarity _getRandomRarity(Random random) {
+  card_model.Rarity _getRandomRarity(Random random) {
     double rand = random.nextDouble();
-    if (rand < 0.005) return Rarity.legendary; // 0.5%
-    if (rand < 0.005 + 0.045) return Rarity.epic; // 4.5%
-    if (rand < 0.005 + 0.045 + 0.15) return Rarity.rare; // 15%
-    return Rarity.common; // 80%
+    if (rand < 0.005) return card_model.Rarity.legendary;
+    if (rand < 0.005 + 0.045) return card_model.Rarity.epic;
+    if (rand < 0.005 + 0.045 + 0.15) return card_model.Rarity.rare;
+    return card_model.Rarity.common;
+  }
+}
+
+/// InheritedNotifier to provide GameState to the widget tree.
+class GameStateProvider extends InheritedNotifier<GameState> {
+  const GameStateProvider({
+    super.key,
+    required super.notifier,
+    required super.child,
+  });
+
+  static GameState of(BuildContext context) {
+    final provider = context
+        .dependOnInheritedWidgetOfExactType<GameStateProvider>();
+    assert(provider != null, 'GameStateProvider not found in context');
+    return provider!.notifier!;
+  }
+}
+
+class GameStateContainer extends StatefulWidget {
+  final Widget child;
+  const GameStateContainer({super.key, required this.child});
+
+  @override
+  State<GameStateContainer> createState() => _GameStateContainerState();
+}
+
+class _GameStateContainerState extends State<GameStateContainer> {
+  final GameState state = GameState();
+
+  @override
+  Widget build(BuildContext context) {
+    return GameStateProvider(notifier: state, child: widget.child);
   }
 }

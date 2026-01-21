@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home_screen.dart';
+import 'providers/game_providers.dart';
 
 void main() {
-  runApp(const ProviderScope(child: Haikyuu()));
+  runApp(const GameStateContainer(child: Haikyuu()));
 }
 
 class Haikyuu extends StatelessWidget {
