@@ -4,7 +4,7 @@ A strategic card collection game inspired by the popular anime *Haikyuu!!*. Buil
 
 ---
 
-## ![alt text](image.png)![alt text](image-1.png)![alt text](image-2.png)
+## ![alt text](image.png)![alt text](<Screenshot 2026-01-22 004422.png>)![alt text](<Screenshot 2026-01-22 004455.png>)
 ### Home Screen
 ![Home Screen](repo-assets/screenshots/home-screen.png)
 *Open booster packs to collect new players and simulate matches to test your team strength.*
