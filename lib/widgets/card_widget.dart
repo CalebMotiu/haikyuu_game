@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import '../models/card.dart';
 
+/// Padding used inside card widgets to provide consistent spacing.
 const double _kCardPadding = 5.0;
 
+/// Abbreviates a stat name to its first three uppercase letters.
+///
+/// Example: 'Power' -> 'POW'
 String _abbreviateStat(String stat) {
   return stat.substring(0, 3).toUpperCase();
 }
 
+/// Displays a player card with image, name, position and stat summary.
+///
+/// - Shows the card image (network or asset),
+/// - Name and position, and
+/// - A compact grid of top/bottom three stats.
 class CardWidget extends StatelessWidget {
   final CardModel card;
   final bool isOwned;
@@ -25,7 +34,7 @@ class CardWidget extends StatelessWidget {
             )
           : RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: SizedBox(
-        width: 140,
+        width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(_kCardPadding),
           child: Column(
@@ -37,12 +46,12 @@ class CardWidget extends StatelessWidget {
                 child: card.imageUrl.startsWith('http')
                     ? Image.network(
                         card.imageUrl,
-                        height: 100,
-                        width: 120,
+                        height: 82,
+                        width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
-                          height: 100,
-                          width: 120,
+                          height: 82,
+                          width: double.infinity,
                           color: Colors.grey[700],
                           child: const Icon(
                             Icons.image_not_supported,
@@ -53,12 +62,12 @@ class CardWidget extends StatelessWidget {
                       )
                     : Image.asset(
                         card.imageUrl,
-                        height: 100,
-                        width: 120,
+                        height: 82,
+                        width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
-                          height: 100,
-                          width: 120,
+                          height: 82,
+                          width: double.infinity,
                           color: Colors.grey[700],
                           child: const Icon(
                             Icons.image_not_supported,
@@ -68,19 +77,25 @@ class CardWidget extends StatelessWidget {
                         ),
                       ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               // Card Name
               SizedBox(
-                height: 30,
-                child: Text(
-                  card.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                height: 32,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4.0,
+                    vertical: 2.0,
+                  ),
+                  child: Text(
+                    card.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -90,12 +105,12 @@ class CardWidget extends StatelessWidget {
                 card.position,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white, fontSize: 9),
+                style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               // Stats Grid
               SizedBox(
-                width: 120,
+                width: double.infinity,
                 child: Column(
                   children: [
                     // Top 3 stats
@@ -104,12 +119,10 @@ class CardWidget extends StatelessWidget {
                         horizontal: _kCardPadding,
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: statsList
                             .sublist(0, 3)
                             .map(
-                              (e) => SizedBox(
-                                width: 36,
+                              (e) => Expanded(
                                 child: Text(
                                   '${_abbreviateStat(e.key)} ${e.value}',
                                   textAlign: TextAlign.center,
@@ -123,19 +136,17 @@ class CardWidget extends StatelessWidget {
                             .toList(),
                       ),
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 2),
                     // Bottom 3 stats
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: _kCardPadding,
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: statsList
                             .sublist(3, 6)
                             .map(
-                              (e) => SizedBox(
-                                width: 36,
+                              (e) => Expanded(
                                 child: Text(
                                   '${_abbreviateStat(e.key)} ${e.value}',
                                   textAlign: TextAlign.center,
