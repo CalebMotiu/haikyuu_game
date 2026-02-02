@@ -1,3 +1,5 @@
+name: Build Flutter Web
+
 on:
   push:
     branches: [ "main" ]
